@@ -14,12 +14,10 @@ function App() {
         <Route exact path="/" component={Landing} />
         {routes.map((route) => {
           if (route.private) {
-            console.log("private");
             return (
               <Privateroute path={route.path} component={route.component} />
             );
           } else {
-            console.log("public");
             return (
               <Publicroute path={route.path} component={route.component} />
             );

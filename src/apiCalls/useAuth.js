@@ -19,7 +19,7 @@ const useProvideAuth = () => {
     email: null,
   }
   const [user, setUser] = useState(defaultUser);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
   const login = ({ username, email, callBack }) => {
