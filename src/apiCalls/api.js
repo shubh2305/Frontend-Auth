@@ -1,22 +1,26 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://localhost:8000/users/';
+import configURL from './config';
+
+axios.defaults.baseURL = configURL;
+
+console.log(configURL);
 
 export async function loginAPI(data) {
   const res = await axios({
     method: 'POST',
-    url: 'login/',
+    url: 'users/login/',
     data: data
   })
     .catch(err => err.response)
-  console.log(res);
+
   return res;
 }
 
 export async function logoutAPI(refreshToken) {
   const res = await axios({
     method: 'POST',
-    url: 'logout/',
+    url: 'users/logout/',
     data: { refresh: refreshToken }
   })
 
@@ -26,7 +30,7 @@ export async function logoutAPI(refreshToken) {
 export async function verifyTokenAPI(token) {
   const res = await axios({
     method: 'POST',
-    url: 'verify-token/',
+    url: 'users/verify-token/',
     data: { token: token }
   }).catch(err => err.response)
 
@@ -36,7 +40,7 @@ export async function verifyTokenAPI(token) {
 export async function getAccessTokenAPI(refreshToken) {
   const res = await axios({
     method: 'POST',
-    url: 'get-access-token/',
+    url: 'users/get-access-token/',
     data: { refresh: refreshToken }
   }).catch(err => err.response)
 
