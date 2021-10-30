@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from "react"
 
-import { loginAPI, logoutAPI, verifyTokenAPI, getAccessTokenAPI } from "./api";
+import { loginAPI, logoutAPI, verifyTokenAPI, getAccessTokenAPI, googleLoginAPI } from "./api";
 
 const authContext = createContext();
 
@@ -16,6 +16,7 @@ export const useAuth = () => {
 
 const useProvideAuth = () => {
   const defaultUser = {
+    id: null,
     email: null,
   }
   const [user, setUser] = useState(defaultUser);
@@ -28,11 +29,11 @@ const useProvideAuth = () => {
 
     if (response.status === 200) {
       const userData = response.data;
-      setUser({ email: userData.user });
+      setUser({ email: userData.user.email });
       setIsLoggedIn(true);
       localStorage.setItem('access', userData.access);
       localStorage.setItem('refresh', userData.refresh);
-      localStorage.setItem('user', userData.user)
+      localStorage.setItem('user', JSON.stringify(userData.user))
       callBack();
     }
 
@@ -45,6 +46,7 @@ const useProvideAuth = () => {
     localStorage.removeItem('refresh');
     localStorage.removeItem('user');
     setUser({
+      id: null,
       email: null,
     })
     setIsLoggedIn(false)
@@ -54,7 +56,7 @@ const useProvideAuth = () => {
   const getUser = async () => {
 
     if (!(localStorage.getItem('access')) || !(localStorage.getItem('refresh')) || !(localStorage.getItem('user'))) {
-      setUser({ email: null });
+      setUser({ id: null, email: null });
       setIsLoggedIn(false);
       return;
     }
@@ -68,7 +70,7 @@ const useProvideAuth = () => {
         localStorage.removeItem('access');
         localStorage.removeItem('refresh');
         localStorage.removeItem('user');
-        setUser({ email: null });
+        setUser({ id: null, email: null });
         setIsLoggedIn(false);
         return;
       }
@@ -77,8 +79,24 @@ const useProvideAuth = () => {
       localStorage.setItem('access', newAccessTokenResponse.data.access);
     }
 
-    setUser({ email: localStorage.getItem('user') })
+    let userData = JSON.parse(localStorage.getItem('user'))
+    setUser({ email: userData.email })
     setIsLoggedIn(true)
+  }
+
+  const googleLogin = async ({ response, callBack }) => {
+
+    const res = await googleLoginAPI(response)
+
+    if (res.status === 200) {
+      const userData = res.data;
+      setUser({ email: userData.user });
+      setIsLoggedIn(true);
+      localStorage.setItem('access', userData.access);
+      localStorage.setItem('refresh', userData.refresh);
+      localStorage.setItem('user', userData.user)
+      callBack();
+    }
   }
 
   return {
@@ -86,6 +104,7 @@ const useProvideAuth = () => {
     isLoggedIn,
     login,
     logout,
-    getUser
+    getUser,
+    googleLogin
   }
 }

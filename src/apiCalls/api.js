@@ -4,8 +4,6 @@ import configURL from './config';
 
 axios.defaults.baseURL = configURL;
 
-console.log(configURL);
-
 export async function loginAPI(data) {
   const res = await axios({
     method: 'POST',
@@ -42,6 +40,16 @@ export async function getAccessTokenAPI(refreshToken) {
     method: 'POST',
     url: 'users/get-access-token/',
     data: { refresh: refreshToken }
+  }).catch(err => err.response)
+
+  return res;
+}
+
+export async function googleLoginAPI(response) {
+  const res = await axios({
+    method: 'POST',
+    url: 'users/google-sign-in/',
+    data: response
   }).catch(err => err.response)
 
   return res;

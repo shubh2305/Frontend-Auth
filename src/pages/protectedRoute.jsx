@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../apiCalls/useAuth";
 const Protectedroute = () => {
-  const { user, isLoggedIn, logout } = useAuth();
+  const { user, logout } = useAuth();
   const history = useHistory();
   return (
     <div>
