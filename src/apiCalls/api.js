@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import configURL from './config';
+import config from './config';
 
-axios.defaults.baseURL = configURL;
+axios.defaults.baseURL = config.url;
 
 export async function loginAPI(data) {
   const res = await axios({

@@ -4,7 +4,7 @@ import GoogleSignIn from "react-google-login";
 import axios from "axios";
 
 import { useAuth } from "../apiCalls/useAuth";
-import configURL from "../apiCalls/config";
+import config from "../apiCalls/config";
 
 const Login = () => {
   const { user, isLoggedIn, login, googleLogin } = useAuth();
@@ -70,7 +70,7 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
       <GoogleSignIn
-        clientId="1057793584454-8r6j96i4dls3tpuct1q0mql1ae9gbt5r.apps.googleusercontent.com"
+        clientId={config.clientId}
         buttonText="Login"
         cookiePolicy={"single_host_origin"}
         onSuccess={onSuccess}
