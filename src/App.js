@@ -1,13 +1,21 @@
 import "./App.css";
-import { Route, Switch } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Error from "./pages/error";
 import routes from "./routes/routes";
 import Privateroute from "./routes/PrivateRoute";
 import Publicroute from "./routes/PublicRoute";
-import { AuthProvider } from "./apiCalls/useAuth";
+import { AuthProvider, useAuth } from "./apiCalls/useAuth";
 import Landing from "./pages/landing";
 
 function App() {
+  const location = useLocation();
+  const { getUser } = useAuth();
+
+  useEffect(() => {
+    getUser();
+  }, [location]);
+
   return (
     <div className="App">
       <Switch>

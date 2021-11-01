@@ -1,19 +1,20 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../apiCalls/useAuth";
 const Protectedroute = () => {
-  const { isLoggedIn, logout } = useAuth();
+  const { user, logout } = useAuth();
   const history = useHistory();
   return (
     <div>
-      <h1>This is protected route</h1>
-      {isLoggedIn && (
-        <button
-          onClick={() => logout({ callBack: () => history.push("/login") })}
-        >
-          Logout
-        </button>
-      )}
+      <h1>Welcome {user.email}</h1>
+
+      <Link to="/protected-route-2">Protected Route 2</Link>
+      <button
+        onClick={() => logout({ callBack: () => history.push("/login") })}
+      >
+        Logout
+      </button>
     </div>
   );
 };
