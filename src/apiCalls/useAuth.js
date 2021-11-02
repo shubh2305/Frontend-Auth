@@ -21,10 +21,11 @@ const useProvideAuth = () => {
   }
   const [user, setUser] = useState(defaultUser);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [loading, setLoading] = useState(false);
 
   const login = async ({ data, callBack }) => {
 
+    setLoading(true);
     const response = await loginAPI(data);
 
     if (response.status === 200) {
@@ -36,10 +37,11 @@ const useProvideAuth = () => {
       localStorage.setItem('user', JSON.stringify(userData.user))
       callBack();
     }
-
+    setLoading(false);
   }
 
   const logout = async ({ callBack }) => {
+    setLoading(true);
     const refresh = localStorage.getItem('refresh');
     const response = await logoutAPI(refresh)
     localStorage.removeItem('access');
@@ -51,13 +53,15 @@ const useProvideAuth = () => {
     })
     setIsLoggedIn(false)
     callBack()
+    setLoading(false);
   }
 
   const getUser = async () => {
-
+    setLoading(true);
     if (!(localStorage.getItem('access')) || !(localStorage.getItem('refresh')) || !(localStorage.getItem('user'))) {
       setUser({ id: null, email: null });
       setIsLoggedIn(false);
+      setLoading(false);
       return;
     }
 
@@ -72,6 +76,7 @@ const useProvideAuth = () => {
         localStorage.removeItem('user');
         setUser({ id: null, email: null });
         setIsLoggedIn(false);
+        setLoading(false);
         return;
       }
 
@@ -82,26 +87,32 @@ const useProvideAuth = () => {
     let userData = JSON.parse(localStorage.getItem('user'))
     setUser({ email: userData.email })
     setIsLoggedIn(true)
+
+    setLoading(false);
   }
 
   const googleLogin = async ({ response, callBack }) => {
 
+    setLoading(true);
     const res = await googleLoginAPI(response)
 
     if (res.status === 200) {
       const userData = res.data;
-      setUser({ email: userData.user });
+      setUser({ email: userData.user.email });
       setIsLoggedIn(true);
       localStorage.setItem('access', userData.access);
       localStorage.setItem('refresh', userData.refresh);
-      localStorage.setItem('user', userData.user)
+      localStorage.setItem('user', JSON.stringify(userData.user));
       callBack();
     }
+
+    setLoading(false);
   }
 
   return {
     user,
     isLoggedIn,
+    loading,
     login,
     logout,
     getUser,
